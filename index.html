@@ -1,2 +1,1122 @@
- <!DOCTYPE html>    <html lang="ru">
-   <head>        <meta charset="UTF-8">        <title>Грамматика</title>    </head>    <body>        <h1>Список юнитов по грамматике:</h1>        <ul>            <li><a href="unit1/">Перейти к Unit 1</a></li>        </ul>    </body>    </html> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Unit Test 1</title>
+<style>
+:root{
+  --bg:#eef6e3; --bg2:#e4f0d5;
+  --surface:#ffffff; --surface2:#f7fbf1;
+  --ink:#2f2a21; --ink-soft:#6d6454; --ink-faint:#9a9285;
+  --line:#d5e3c2; --line-strong:#b9cfa0;
+  --accent:#43892f; --accent-dark:#356d25; --accent-soft:#e2f0d2;
+  --warn:#9d5a16; --warn-soft:#fdf1dd;
+  --danger:#a83232; --danger-soft:#fbeaea;
+  --r:14px; --r-sm:10px;
+  --shadow:0 1px 2px rgba(47,42,33,.06), 0 4px 16px rgba(47,42,33,.05);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:17px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  padding:0 0 88px; overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+h1{font-size:clamp(26px,6vw,34px);line-height:1.2;margin:0 0 6px;letter-spacing:-.02em}
+h2{font-size:clamp(20px,4.6vw,24px);line-height:1.25;margin:0 0 4px;letter-spacing:-.01em}
+h3{font-size:16px;margin:30px 0 10px;color:var(--ink-soft);font-weight:700;
+   text-transform:uppercase;letter-spacing:.07em}
+p{margin:0 0 14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+      padding:20px;box-shadow:var(--shadow);margin:0 0 16px}
+.muted{color:var(--ink-soft);font-size:15px}
+.tiny{font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
+.hidden{display:none !important}
+
+/* test text cannot be selected; answer fields can */
+body.testing #app{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+body.testing #app input, body.testing #app textarea{-webkit-user-select:text;user-select:text}
+
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:52px;padding:14px 26px;border-radius:var(--r-sm);
+  background:var(--accent);color:#fff;font-weight:650;font-size:17px;
+  border:1px solid var(--accent-dark);width:100%;transition:background .12s}
+.btn:hover:not(:disabled){background:var(--accent-dark)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:disabled{background:#c3cdb6;border-color:#b3bda6;cursor:not-allowed}
+.btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);font-weight:600}
+.btn-ghost:hover:not(:disabled){background:var(--surface2)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap}
+.btn-row .btn{width:auto;flex:1 1 160px}
+
+.rules{list-style:none;margin:0;padding:0}
+.rules li{position:relative;padding:0 0 0 30px;margin:0 0 11px;font-size:16px;line-height:1.5}
+.rules li::before{content:"";position:absolute;left:8px;top:.62em;width:7px;height:7px;
+  border-radius:50%;background:var(--accent)}
+.rules b{font-weight:680}
+.field{margin:0 0 14px}
+.field label{display:block;font-weight:640;font-size:15px;margin:0 0 6px}
+.field input{width:100%;min-height:52px;padding:13px 15px;font:inherit;color:var(--ink);
+  background:var(--surface);border:1.5px solid var(--line-strong);border-radius:var(--r-sm)}
+.field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.notice{background:var(--surface2);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:var(--r-sm);padding:12px 14px;font-size:14.5px;line-height:1.5;color:var(--ink-soft);margin:0 0 18px}
+.err{color:var(--danger);font-size:14.5px;font-weight:600;margin:10px 0 0}
+
+.topbar{position:sticky;top:0;z-index:20;background:var(--bg2);
+  border-bottom:1px solid var(--line-strong);padding:10px 0}
+.topbar .wrap{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.crumb{font-size:14px;font-weight:660;letter-spacing:.01em}
+.crumb span{color:var(--ink-soft);font-weight:500}
+.clock{font-variant-numeric:tabular-nums;font-size:15px;font-weight:680;
+  padding:5px 11px;border-radius:99px;background:var(--surface);border:1px solid var(--line-strong);white-space:nowrap}
+.clock.low{background:var(--warn-soft);border-color:#e6c48c;color:var(--warn)}
+.bar{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin:9px 0 0}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.flash{background:var(--warn-soft);border:1px solid #e6c48c;color:var(--warn);
+  border-radius:var(--r-sm);padding:11px 14px;font-size:14.5px;font-weight:600;margin:0 0 14px}
+
+.instr{background:var(--accent-soft);border-radius:var(--r-sm);padding:13px 15px;
+  font-size:15.5px;line-height:1.5;margin:0 0 18px;font-weight:520}
+.passage{background:var(--surface2);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:16px 17px;margin:0 0 18px}
+.passage h4{margin:0 0 4px;font-size:18px;letter-spacing:-.01em}
+.passage .byline{font-weight:650;font-size:15.5px;margin:0 0 12px;color:var(--ink-soft)}
+.passage h4 + p{margin-top:10px}
+.passage p{margin:0 0 13px;font-size:16.5px;line-height:1.95}
+.passage p:last-child{margin:0}
+.ins{background:var(--accent-soft);border-radius:5px;padding:1px 5px;font-weight:560}
+.unset{color:var(--ink-faint);font-weight:650;white-space:nowrap}
+
+.q{border-top:1px solid var(--line);padding:16px 0 6px;margin:0}
+.q.first{border-top:0;padding-top:2px}
+.q-head{display:flex;gap:10px;align-items:baseline;margin:0 0 8px}
+.q-num{flex:0 0 auto;min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;
+  background:var(--ink);color:#fff;border-radius:7px;font-size:13.5px;font-weight:700;padding:0 6px}
+.q-text{font-size:16.5px;line-height:1.5;font-weight:520;min-width:0;flex:1 1 auto}
+.sent{line-height:2.25}
+.who{font-weight:720;color:var(--accent-dark)}
+.turn{margin:0 0 10px;font-size:16.5px;line-height:2.25;padding-left:0}
+.prompt{display:block;background:var(--surface2);border-left:3px solid var(--line-strong);
+  padding:8px 13px;border-radius:0 8px 8px 0;font-size:16px;margin:0 0 9px;line-height:1.5}
+
+.opts{display:flex;flex-direction:column;gap:9px;margin:0 0 6px}
+.opts.row{flex-direction:row;flex-wrap:wrap}
+.opts.row .opt{flex:1 1 30%;justify-content:center;font-weight:650;min-width:84px}
+.opt{display:flex;align-items:flex-start;gap:11px;min-height:48px;padding:12px 14px;
+  background:var(--surface);border:1.5px solid var(--line-strong);border-radius:var(--r-sm);
+  text-align:left;font-size:16px;line-height:1.45;transition:background .12s,border-color .12s}
+.opt:hover{background:var(--surface2)}
+.opt .mark{flex:0 0 auto;width:25px;height:25px;border-radius:50%;border:1.5px solid var(--line-strong);
+  display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+  color:var(--ink-soft);background:var(--surface)}
+.opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt[aria-pressed="true"] .mark{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.gapunit{display:inline-block;white-space:nowrap;vertical-align:middle;margin:0 2px}
+.inl{display:inline-block;width:8.5em;max-width:100%;min-height:44px;
+  padding:9px 9px;font:inherit;font-size:16px;color:var(--ink);text-align:center;
+  background:var(--surface);border:0;border-bottom:2px solid var(--line-strong);border-radius:4px}
+.inl.w-s{width:6.5em}
+.inl.w-l{width:13.5em}
+.inl.wide{display:block;width:100%;text-align:left;padding:10px 12px;
+  border:1.5px solid var(--line-strong);border-radius:var(--r-sm)}
+textarea.inl{resize:none;line-height:1.45;min-height:66px;font-family:inherit}
+.inl:focus{outline:none;border-color:var(--accent);background:var(--accent-soft)}
+.inl.filled{border-color:var(--accent)}
+.gnum{display:inline-block;font-size:12.5px;font-weight:750;color:#fff;background:var(--ink);
+  border-radius:5px;padding:1px 6px;margin:0 3px 0 0;vertical-align:1px}
+.count{display:block;font-size:13.5px;font-weight:660;color:var(--ink-soft);margin:4px 0 0;min-height:1.2em}
+.count.bad{color:var(--danger)}
+.count.ok{color:var(--accent-dark)}
+
+.wordbox{display:flex;flex-wrap:wrap;gap:8px;background:var(--bg2);border:1px solid var(--line-strong);
+  border-radius:var(--r-sm);padding:12px;margin:0 0 18px}
+.chip{display:inline-block;background:var(--surface);border:1px solid var(--line-strong);border-radius:99px;
+  padding:5px 13px;font-size:15.5px;font-weight:600}
+.chip.used{text-decoration:line-through;color:var(--ink-faint);background:var(--surface2);border-style:dashed}
+
+.gap-btn{display:inline-flex;align-items:center;justify-content:center;min-width:76px;min-height:44px;
+  padding:4px 14px;margin:2px;font:inherit;font-size:15px;font-weight:700;
+  background:var(--surface);border:2px dashed var(--line-strong);border-radius:8px;color:var(--ink-soft);
+  vertical-align:middle;line-height:1.3}
+.gap-btn.set{border-style:solid;border-color:var(--accent);background:var(--accent-soft);
+  color:var(--ink);font-weight:600}
+.gap-btn.long.set{display:inline;padding:3px 7px;white-space:normal;text-align:left;font-size:15.5px;line-height:1.6}
+.sentlist{list-style:none;margin:0 0 6px;padding:0}
+.sentlist li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin:0 0 8px;
+  background:var(--surface);border:1.5px solid var(--line-strong);border-radius:var(--r-sm);
+  font-size:15.5px;line-height:1.45}
+.sentlist li.used{color:var(--ink-faint);background:var(--surface2);border-style:dashed;text-decoration:line-through}
+.sentlist .mark, .pick .mark{flex:0 0 auto;min-width:25px;height:25px;border-radius:7px;border:1.5px solid var(--line-strong);
+  display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--ink-soft);
+  text-decoration:none}
+
+.player{background:var(--surface2);border:1px solid var(--line-strong);border-radius:var(--r);
+  padding:18px;margin:0 0 20px;text-align:center}
+.plays{display:inline-block;font-size:14px;font-weight:700;letter-spacing:.02em;
+  background:var(--surface);border:1px solid var(--line-strong);border-radius:99px;
+  padding:5px 14px;margin:0 0 14px}
+.plays.none{background:var(--danger-soft);border-color:#e0b4b4;color:var(--danger)}
+.plays.playing{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
+.play-btn{min-height:56px;font-size:17.5px}
+.pbar{height:7px;background:var(--line);border-radius:99px;overflow:hidden;margin:14px 0 8px}
+.pbar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s linear}
+.ptime{font-variant-numeric:tabular-nums;font-size:14px;font-weight:660;color:var(--ink-soft)}
+.locked{background:var(--danger-soft);border:1px solid #e0b4b4;color:var(--danger);
+  border-radius:var(--r-sm);padding:12px 14px;font-size:15px;font-weight:620;margin:14px 0 0}
+
+.footbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--bg2);
+  border-top:1px solid var(--line-strong);padding:11px 0 calc(11px + env(safe-area-inset-bottom))}
+.footbar .wrap{display:flex;align-items:center;gap:12px}
+.footbar .btn{flex:1}
+
+.final{text-align:center;padding:36px 20px}
+.tick{width:64px;height:64px;border-radius:50%;background:var(--accent);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:34px;margin:0 0 18px}
+.tick.warn{background:var(--warn)}
+.tick.stop{background:var(--ink-soft)}
+
+.veil{position:fixed;inset:0;z-index:60;background:rgba(47,42,33,.45);
+  display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--surface);border-radius:var(--r);padding:20px;max-width:460px;width:100%;
+  max-height:86vh;overflow:auto;box-shadow:0 12px 40px rgba(47,42,33,.22)}
+.modal p{font-size:16.5px;line-height:1.5}
+.pick{display:flex;flex-direction:column;gap:8px;margin:0 0 14px}
+.pick .opt{min-height:46px;padding:10px 12px;font-size:15.5px}
+
+@media (min-width:768px){
+  body{font-size:17.5px}
+  .card{padding:26px 28px}
+  .btn-row .btn{flex:0 1 auto;min-width:190px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<!-- the recording lives next to index.html; the path is relative and case-sensitive -->
+<audio id="listening-audio" src="listening.mp3" preload="metadata"></audio>
+
+<!-- hidden target for the fallback submission route (form posted into an iframe) -->
+<iframe name="gfsink" id="gfsink" style="display:none" title="submit sink"></iframe>
+
+<script>
+/* =====================================================================
+   UNIT TEST — single file, no libraries, no CDN, no external fonts.
+   Works offline; the network is used only for the final form submission.
+   ===================================================================== */
+
+/* 1. CONFIG — the only block that changes between forms and units ----- */
+var CONFIG = {
+  "TITLE": "Unit Test 1",
+  "SUB": "12 exercises · 80 minutes",
+  "FORM_ID": "1FAIpQLScB4q5NlzOnO5CoD5s5dSi-kCOfaA77TES0GonlYkHYkybpTQ",
+  "ENTRY": {
+    "firstName": "entry.1333783576",
+    "surname": "entry.1963125644",
+    "group": "entry.506496268",
+    "result": "entry.1991347667",
+    "errors": "entry.1229893968"
+  },
+  "MINUTES": 80,
+  "AUDIO_PLAYS": 2,
+  "TOTAL": 77,
+  "ERR_LIMIT": 8000,
+  "AWAY_MAX": 40,
+  "AWAY_MIN_MS": 2000,
+  "STORE_PROG": "ut_unit1_prog",
+  "STORE_DONE": "ut_unit1_done",
+  "RESET_PARAM": "teacher",
+  "RESET_VALUE": "reset"
+};
+
+/* 2. INTERFACE TEXT --------------------------------------------------- */
+var T = {
+  first:'First name', last:'Surname', group:'Group',
+  notice:'Your name, group and result are sent to your teacher and used for assessment only.',
+  rules:[
+    'You have <b>' + CONFIG.MINUTES + ' minutes</b>. The timer starts when you press Start and keeps running if you reload the page.',
+    'The Listening recording can be played <b>twice</b>. You cannot pause or rewind it.',
+    'Once you move on to the next exercise, you <b>cannot go back</b>.',
+    '<b>Spelling is marked strictly</b> — check your answers before you continue.',
+    'Your answers are saved automatically. You have <b>one attempt</b>.'
+  ],
+  start:'Start the test',
+  fillAll:'Please fill in all three fields.',
+  timeLeft:function(s){return 'Time left '+s;},
+  fiveLeft:'5 minutes left',
+  next:'Next exercise →',
+  finish:'Finish and submit',
+  noReturn:'You cannot return to this exercise. Continue?',
+  submitQ:'Submit your test now? You cannot change your answers after this.',
+  cancel:'Cancel', cont:'Continue', clear:'Clear this gap',
+  blanks:function(n){return n+' item'+(n===1?' is':'s are')+' still blank.';},
+  tabAway:'You have left the test page. Please stay on this page until you finish.',
+  play:'▶  Play the recording',
+  playsLeft:function(n,of){return 'Plays left: '+n+' of '+of;},
+  playing:'Playing…',
+  noPlays:'No plays left. The recording is now locked.',
+  noPause:'You cannot pause or rewind. Listen all the way through.',
+  audioErr:'The recording could not be loaded. Tell your teacher.',
+  tapGap:'Tap a gap to choose an answer.',
+  choose:function(g){return 'Choose the answer for gap ('+g+')';},
+  wordsOk:function(n){return n+' word'+(n===1?'':'s');},
+  wordsBad:function(n,a,b){return n+' words — write '+a+' to '+b+' words';},
+  sending:'Submitting your work…',
+  doneTitle:'Thank you. Your work has been submitted.',
+  doneSub:'You may now close this page.',
+  timeUp:'Time is up. Your work has been submitted.',
+  failTitle:'We could not send your work.',
+  failSub:'Check your internet connection and press “Try again”. If it still does not work, press “Copy my answers” and send them to your teacher.',
+  copy:'Copy my answers', copied:'Copied', retry:'Try again',
+  alreadyTitle:'You have already taken this test.',
+  loadErr:'Something went wrong loading the test. Please reload the page.'
+};
+
+/* 3. VISIBLE TEST DATA — only what is printed on screen. No answers here. */
+var DATA = [{"label":"Exercise 1 of 12","title":"Exercise 1","section":"Vocabulary","parts":[{"ex":1,"type":"lines","instr":"Complete the sentences with the correct school life words.","items":[{"n":1,"t":"Rather than going straight to the canteen, the students spent their lunch {{}} rehearsing for the school play."},{"n":2,"t":"Students whose final {{}} falls below 5 risk having to do extra work over the summer holidays."},{"n":3,"t":"Had I known how demanding it would be, I might have chosen a different {{}} instead of Physics."},{"n":4,"t":"Your {{}} for this course is based not only on your exam results but also on your homework and your behaviour in class."},{"n":5,"t":"What impressed the inspectors most was the excellent relationship between the pupils and the {{}}."},{"n":6,"t":"You’ll find revision far less stressful provided you take detailed {{}} during every lesson."}]}]},{"label":"Exercise 2 of 12","title":"Exercise 2","section":"Vocabulary","parts":[{"ex":2,"type":"defs","instr":"Write the correct higher education words for the definitions.","items":[{"n":1,"t":"the area of land on which the main buildings of a university are situated, often including rooms for students to live in."},{"n":2,"t":"a student who is studying for their first degree at university."},{"n":3,"t":"a student who, having completed a first degree, is continuing their studies at a more advanced level."},{"n":4,"t":"a large room in which talks are delivered to a big audience of university students."},{"n":5,"t":"a member of university staff who offers academic advice on a student’s choice of programmes."},{"n":6,"t":"a class in which a small group of students discusses a topic in depth with a teacher."},{"n":7,"t":"money borrowed by students to cover the cost of their university fees, which must be paid back later."}]}]},{"label":"Exercise 3 of 12","title":"Exercise 3","section":"Vocabulary","parts":[{"ex":3,"type":"chips","instr":"Complete the dialogue with the words in the box. There are two extra words which you do not need to use.","gaps":["a","b","c","d","e","f","g"],"box":[{"id":"c1","t":"a cake"},{"id":"c2","t":"a decision"},{"id":"c3","t":"an excuse"},{"id":"c4","t":"friends"},{"id":"c5","t":"a mistake"},{"id":"c6","t":"a phone call"},{"id":"c7","t":"progress"},{"id":"c8","t":"the shopping"},{"id":"c9","t":"sport"}],"turns":[["Maya","Hi, Tom! I’ve just done {{a}} for Grandma’s birthday party. These bags are so heavy!"],["Tom","Let me carry one. Have you made {{b}} about her present yet?"],["Maya","Not yet. I’m torn between a cookery book and concert tickets."],["Tom","Get the tickets — and why don’t we make {{c}} for her ourselves as well? She’s always had a sweet tooth."],["Maya","Great idea! By the way, how is your little sister getting on at her new school?"],["Tom","Really well. She’s already made {{d}} with the children next door, and her teachers say she’s making {{e}} in English."],["Maya","That’s good news. Oh no — I’ve just remembered I need to make {{f}} to the bakery to cancel the cake I ordered!"],["Tom","Do it now, or you’ll have to make {{g}} when two enormous cakes turn up at the party!"],["Maya","Ha! You’re right. I’ll call them straight away."]]}]},{"label":"Exercise 4 of 12","title":"Exercise 4","section":"Grammar","parts":[{"ex":4,"type":"lines","w":"w-l","instr":"Complete the sentences with the present simple or present continuous form of the verbs given. Use will in one sentence.","items":[{"n":1,"t":"My brother {{}} (constantly borrow) my laptop without asking — it drives me up the wall!"},{"n":2,"t":"During term time, Olga {{}} (not have) much free time because of all her coursework."},{"n":3,"t":"Grandpa loves talking about his university days. He {{}} (tell) the same stories for hours."},{"n":4,"t":"Before every tutorial, our personal tutor {{}} (check) that everyone has done the reading."},{"n":5,"t":"However hard I try to concentrate in the library, someone {{}} (always make) a noise!"}]}]},{"label":"Exercise 5 of 12","title":"Exercise 5","section":"Grammar","parts":[{"ex":5,"type":"write","instr":"Write complete sentences using the prompts. Use the present perfect and add words if necessary.","items":[{"n":1,"t":"Sara / not do / her assignment / yet /."},{"n":2,"t":"I / never / attend / a lecture / on current affairs /."},{"n":3,"t":"they / just / make / friends / with their new classmates /."},{"n":4,"t":"Marco / just / be awarded / a scholarship / to Boston University /."},{"n":5,"t":"you / choose / your subjects / for next term / yet / ?"},{"n":6,"t":"we / be / on campus / since eight o’clock this morning /."}]}]},{"label":"Exercise 6 of 12","title":"Exercise 6","section":"Grammar","parts":[{"ex":6,"type":"lines","w":"w-l","instr":"Complete the mini-dialogues with the correct present perfect simple or continuous form of the verbs in the box. There are two extra verbs which you do not need to use.","box":["buy","do","lose","read","revise","study","take","wait","write"],"items":[{"n":1,"rows":[["Ana","You look really tired!"],["Ben","I know. I {{}} for my Maths exam all afternoon."]]},{"n":2,"rows":[["Tom","Why are your hands covered in ink?"],["Mia","I {{}} notes for my History project all morning."]]},{"n":3,"rows":[["Leo","{{a}} you {{b}} for the bus for a long time?"],["Kim","Yes, for almost half an hour!"]]},{"n":4,"rows":[["Sue","I {{}} that novel by J.K. Rowling three times!"],["Dan","Wow, you must really love it."]]},{"n":5,"rows":[["Pam","{{a}} you {{b}} your homework yet?"],["Joe","Yes, I finished it an hour ago."]]},{"n":6,"rows":[["Fay","How long {{a}} you {{b}} English?"],["Gus","Since I was six years old."]]},{"n":7,"rows":[["Ben","Your Spanish has really improved!"],["Ana","Thanks! I {{}} private lessons since September."]]}]}]},{"label":"Exercise 7 of 12","title":"Exercise 7","section":"Grammar","parts":[{"ex":7,"type":"lines","w":"w-l","instr":"Complete the sentences about preferences using the verbs given. Use the correct form of each verb and add to or than where necessary.","items":[{"n":1,"t":"As a rule, I prefer {{a}} (take) notes by hand {{b}} (type) them on a laptop."},{"n":2,"t":"Our lecturers prefer us {{}} (do) our assignments well before the end of term."},{"n":3,"t":"To be honest, I’d prefer {{a}} (do) a degree abroad {{b}} (study) in my home town."},{"n":4,"t":"My parents would prefer me {{}} (not take) out a student loan this year."},{"n":5,"t":"Frankly, I’d rather {{}} (not share) student accommodation with people I’ve never met."},{"n":6,"t":"Tonight I’d rather {{a}} (have) a bite to eat on campus {{b}} (make) the dinner myself."},{"n":7,"t":"My personal tutor would rather I {{}} (not miss) any more tutorials this term."}]}]},{"label":"Exercise 8 of 12","title":"Exercise 8","section":"Use of English","parts":[{"ex":8,"type":"cloze","instr":"Read the text below and think of the word that best fits each gap. Use only one word in each gap.","gaps":["a","b","c","d","e","f","g","h"],"title":"Higher education: How is it for you?","byline":"Daniel, 20, Manchester","paras":["I {{a}} been at university since September, and coming here is the best decision I’ve ever made. I’m doing a {{b}} in Business Studies, and I find the lectures and tutorials really interesting.","I’ve been living in student accommodation {{c}} the day I arrived. My room is quite small, but it’s situated right on the main {{d}}, which means I can attend lectures, do sport and meet my friends without ever leaving it.","Money is by far the most challenging aspect of student life, and food is anything but cheap. Whenever it’s his turn to do the washing-up, my flatmate {{e}} make an excuse. As I’m on a tight budget, I’d {{f}} make the dinner myself than buy a takeaway. Luckily, I’ve been given a student {{g}}, which covers the cost of my lessons and accommodation. It hasn’t all been plain sailing, but I don’t regret a thing. You only get one chance to enjoy student life, so you should make the most {{h}} it!"]}]},{"label":"Exercises 9–10 of 12","title":"Exercises 9 and 10","section":"Listening","audio":true,"parts":[{"ex":9,"type":"tfn","instr":"Listen to a radio show about home-schooling. Are the sentences True (T), False (F), or Not Mentioned (NM)?","opts":[{"id":"T","t":"T"},{"id":"F","t":"F"},{"id":"NM","t":"NM"}],"items":[{"n":1,"t":"Sally believes schools are the best places for children to make friends and learn valuable social skills."},{"n":2,"t":"Steven enjoyed both primary and secondary school."},{"n":3,"t":"At secondary school, Steven had the same teacher for every subject."},{"n":4,"t":"Sally accepts that schools, like society, are not perfect."},{"n":5,"t":"After leaving school, Steven used online resources and tutorials."},{"n":6,"t":"Sally has worked as a head teacher for more than twenty years."},{"n":7,"t":"Outside school, Steven joined a chess club."}]},{"ex":10,"type":"lines","w":"w-l","count":[1,3],"instr":"Listen again and complete the sentences with a word or short phrase. Write one to three words in each gap.","items":[{"n":1,"t":"Steven says that at his secondary school there were over a thousand students and so many {{}}."},{"n":2,"t":"Steven found secondary school confusing and {{}}, because he couldn’t learn what he wanted."},{"n":3,"t":"Sally says that having different teachers means students will be taught by {{}} in that subject."},{"n":4,"t":"According to Sally, being a teacher is {{}}, and many parents already have one of those."},{"n":5,"t":"Being home-schooled gave Steven more time to join {{}} outside school."}]}]},{"label":"Exercise 11 of 12","title":"Exercise 11","section":"Reading","parts":[{"ex":11,"type":"bank","instr":"Read the article and complete the gaps (a–f) with the sentences below. There are two extra sentences which you do not need to use.","gaps":["a","b","c","d","e","f"],"title":"Learning without teachers","paras":["Most of us take it for granted that learning means sitting in a classroom while a teacher explains things at the front. But imagine walking into a school where there are no lecturers, no lectures and no timetable at all. {{a}}","Lehto had spent years interviewing young programmers for jobs, and she had noticed something surprising. Many candidates with excellent grades and impressive degrees struggled the moment they had to deal with a problem nobody had taught them to solve. In her view, traditional courses gave students knowledge, but not independence. {{b}}","At Code Campus, there are no entrance exams and no school fees. Instead, applicants take part in a four-week challenge in which they must complete a new project every few days. Nobody shows them how to do it. {{c}}","Learning happens in two main ways. The first is through the projects themselves, which gradually become more complicated. The second is through other students: when someone gets stuck, they must ask the people sitting around them, and every finished project is marked by three fellow students rather than by a member of staff. {{d}} By explaining their decisions and defending their choices, they often make faster progress than they would alone.","The school’s results eventually attracted international attention. {{e}} Soon, universities and companies around the world became interested in opening similar campuses, and today you will find them in more than a dozen countries across Europe, Asia and South America.","Of course, the model has its critics. Some teachers point out that without an expert in the room, students may repeat one another’s mistakes or miss important theory altogether. Others worry that such an independent system only suits confident learners, while shy students risk being left behind. {{f}} But what Code Campus shows us is that young people are capable of far more independence than schools usually give them credit for. Perhaps the real lesson is that education works best when it trusts its students."],"sentences":[{"id":"1","t":"What is even more remarkable is how much the students learn while checking each other’s work."},{"id":"2","t":"In 2019, Lehto was invited to speak at a major education conference in London about her methods."},{"id":"3","t":"With this in mind, she decided to design a school that would turn traditional education upside down."},{"id":"4","t":"Well, that’s exactly what happens at Code Campus, a programming school founded in Helsinki by software engineer Marta Lehto in 2015."},{"id":"5","t":"It didn’t take long for most of the applicants to give up and return to their old universities."},{"id":"6","t":"So there is little doubt that traditional teachers will continue to play an essential role in most classrooms."},{"id":"7","t":"The second is through weekly lectures given by experienced members of staff."},{"id":"8","t":"Those who survive this demanding month are offered a place on the full three-year programme."}]}]},{"label":"Exercise 12 of 12","title":"Exercise 12","section":"Reading","parts":[{"ex":12,"type":"mcq","passageFrom":11,"instr":"Read the text again and choose the best answers (A, B, C or D).","items":[{"n":1,"t":"While interviewing job candidates, Marta Lehto noticed that many of them …","opts":[{"id":"a","t":"had poor grades despite their impressive degrees."},{"id":"b","t":"could not cope with problems they had never been taught to solve."},{"id":"c","t":"had lied about their qualifications and degrees."},{"id":"d","t":"refused to work without a teacher’s help."}]},{"n":2,"t":"To win a place at Code Campus, applicants must …","opts":[{"id":"a","t":"pass a difficult entrance exam."},{"id":"b","t":"pay the fees for a four-week course."},{"id":"c","t":"already have a degree in programming."},{"id":"d","t":"complete a series of projects without any help."}]},{"n":3,"t":"Every finished project at the school is assessed by …","opts":[{"id":"a","t":"three other students."},{"id":"b","t":"a member of staff."},{"id":"c","t":"Marta Lehto herself."},{"id":"d","t":"companies that work with the school."}]},{"n":4,"t":"According to the article, marking each other’s work …","opts":[{"id":"a","t":"takes up too much of the students’ time."},{"id":"b","t":"often leads to arguments between students."},{"id":"c","t":"helps students understand their own choices better."},{"id":"d","t":"is a task given only to the most experienced students."}]},{"n":5,"t":"After Lehto spoke at the conference in London, …","opts":[{"id":"a","t":"she decided to close the original campus."},{"id":"b","t":"companies stopped employing Code Campus graduates."},{"id":"c","t":"the school introduced traditional lectures."},{"id":"d","t":"schools based on her model opened in many countries."}]},{"n":6,"t":"Some critics of the school believe that …","opts":[{"id":"a","t":"the system may not suit every kind of student."},{"id":"b","t":"students spend too much time studying theory."},{"id":"c","t":"confident learners make no progress there."},{"id":"d","t":"graduates cannot find jobs when they finish."}]}]}]}];
+
+/* 4. KEY — obfuscated (XOR + base64). This is obfuscation, not protection:
+      the page source is public, and ref() called from the console shows it.
+      This comment describes the checking rules only, never the answers.
+      Shapes: {v:[..]} text variants (first = teacher key) · {v:[..],art:1}
+      leading article ignored · {a:[..],b:[..]} two fields, both required ·
+      {f:{..},s:".."} grammar frame · {k:".."} id of the right option.      */
+var REF_BLOB = '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';
+var _K = null;
+function ref(){
+  if (_K) return _K;
+  var k = 'uT1w3b' + '-b2H-' + '2o26' + '::kq';
+  var raw = atob(REF_BLOB), p = '';
+  for (var i=0;i<raw.length;i++){
+    var c = raw.charCodeAt(i) ^ k.charCodeAt(i % k.length);
+    p += '%' + ('0'+c.toString(16)).slice(-2);
+  }
+  _K = JSON.parse(decodeURIComponent(p));
+  return _K;
+}
+
+/* 5. CHECKING --------------------------------------------------------- */
+function norm(s){
+  return String(s == null ? '' : s)
+    .replace(/[‘’ʼ´`]/g, "'")
+    .replace(/[“”«»]/g, '"')
+    .replace(/[‐‑‒–—−]/g, '-')
+    .replace(/ /g, ' ')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/[.,;:!?]+$/, '')
+    .trim();
+}
+function noArt(s){ return s.replace(/^(a|an|the) /, ''); }
+function matches(val, list, art){
+  var v = norm(val);
+  if (!v) return false;
+  if (art) v = noArt(v);
+  for (var i=0;i<list.length;i++){
+    var k = norm(list[i]);
+    if (art) k = noArt(k);
+    if (k === v) return true;
+  }
+  return false;
+}
+function wordCount(s){
+  s = String(s||'').trim();
+  return s ? s.split(/\s+/).length : 0;
+}
+/* Sentence writing: only the grammatical frame is scored.
+   f.alts  — token sequences, one of which must appear with its tokens adjacent
+   f.start — the frame must open the sentence
+   f.then  — a token that must follow the frame; f.end — it must be the last word
+   f.min   — minimum number of words in the whole answer                      */
+function frameOK(val, f){
+  var toks = norm(val).replace(/[.,;:!?"]/g, ' ').split(/\s+/).filter(Boolean);
+  if (toks.length < f.min) return false;
+  for (var a=0;a<f.alts.length;a++){
+    var alt = f.alts[a], last = f.start ? 0 : toks.length - alt.length;
+    for (var i=0;i<=last;i++){
+      var hit = true;
+      for (var j=0;j<alt.length;j++) if (toks[i+j] !== alt[j]){ hit = false; break; }
+      if (!hit) continue;
+      if (!f.then) return true;
+      if (f.end){ if (toks[toks.length-1] === f.then && toks.length-1 >= i+alt.length) return true; }
+      else if (toks.indexOf(f.then, i+alt.length) >= 0) return true;
+    }
+  }
+  return false;
+}
+
+/* 6. STATE AND localStorage ------------------------------------------ */
+var S = {
+  student:{first:'',last:'',group:''},
+  startedAt:null, idx:0,
+  ans:{}, orders:{},
+  plays:0, away:[], pasteN:0, copyN:0,
+  finished:null
+};
+function lsGet(k){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
+function lsSet(k,v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
+function save(){ lsSet(CONFIG.STORE_PROG, S); }
+
+(function teacherReset(){
+  try {
+    var q = new URLSearchParams(location.search);
+    if (q.get(CONFIG.RESET_PARAM) === CONFIG.RESET_VALUE){
+      lsDel(CONFIG.STORE_PROG); lsDel(CONFIG.STORE_DONE);
+      history.replaceState(null, '', location.pathname);
+    }
+  } catch(e){}
+})();
+
+/* 7. HELPERS ---------------------------------------------------------- */
+function esc(s){
+  return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function el(id){ return document.getElementById(id); }
+function app(html){ el('app').innerHTML = html; }
+function letter(i){ return String.fromCharCode(65+i); }
+function each(sel, fn){ Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+function testOn(){ return !!(S.startedAt && !S.finished); }
+function partByEx(ex){
+  for (var i=0;i<DATA.length;i++) for (var j=0;j<DATA[i].parts.length;j++)
+    if (DATA[i].parts[j].ex === ex) return DATA[i].parts[j];
+  return null;
+}
+function byId(list, id){ for (var i=0;i<list.length;i++) if (list[i].id === id) return list[i]; return null; }
+
+function orderFor(key, opts){
+  if (S.orders[key]) return S.orders[key];
+  var ids = opts.map(function(o){ return o.id; });
+  for (var i=ids.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var t = ids[i]; ids[i] = ids[j]; ids[j] = t;
+  }
+  S.orders[key] = ids;
+  return ids;
+}
+
+/* Items of a part: id used in the key and the report, and its answer fields */
+function partItems(p){
+  if (p.type === 'lines') return p.items.map(function(it){
+    var src = it.rows ? it.rows.map(function(r){ return r[1]; }).join(' ') : it.t, sf = [];
+    src.replace(/\{\{([a-z]?)\}\}/g, function(m, s){ sf.push(s); });
+    return {id:p.ex+'.'+it.n, fields:sf.map(function(s){ return p.ex+'.'+it.n+s; })};
+  });
+  if (p.gaps) return p.gaps.map(function(g){ return {id:p.ex+'.'+g, fields:[p.ex+'.'+g]}; });
+  return p.items.map(function(it){ return {id:p.ex+'.'+it.n, fields:[p.ex+'.'+it.n]}; });
+}
+
+/* 8. START SCREEN ----------------------------------------------------- */
+function screenStart(){
+  document.body.classList.remove('testing');
+  var rules = T.rules.map(function(r){ return '<li>'+r+'</li>'; }).join('');
+  app(
+  '<div class="wrap" style="padding-top:34px">'+
+    '<h1>'+esc(CONFIG.TITLE)+'</h1>'+
+    '<p class="muted" style="margin-bottom:22px">'+esc(CONFIG.SUB)+'</p>'+
+    '<div class="card"><ul class="rules">'+rules+'</ul></div>'+
+    '<div class="card">'+
+      '<div class="field"><label for="f-first">'+esc(T.first)+'</label>'+
+        '<input id="f-first" type="text" autocomplete="off" spellcheck="false" maxlength="40"></div>'+
+      '<div class="field"><label for="f-last">'+esc(T.last)+'</label>'+
+        '<input id="f-last" type="text" autocomplete="off" spellcheck="false" maxlength="40"></div>'+
+      '<div class="field"><label for="f-group">'+esc(T.group)+'</label>'+
+        '<input id="f-group" type="text" autocomplete="off" spellcheck="false" maxlength="20"></div>'+
+      '<div class="notice">'+esc(T.notice)+'</div>'+
+      '<button class="btn" id="go">'+esc(T.start)+'</button>'+
+      '<p class="err hidden" id="start-err">'+esc(T.fillAll)+'</p>'+
+    '</div>'+
+  '</div>');
+  el('go').onclick = function(){
+    var f = el('f-first').value.trim(), l = el('f-last').value.trim(), g = el('f-group').value.trim();
+    if (!f || !l || !g){ el('start-err').classList.remove('hidden'); return; }
+    S.student = {first:f, last:l, group:g};
+    S.startedAt = Date.now();
+    S.idx = 0;
+    save();
+    startTimer();
+    renderScreen();
+  };
+}
+
+/* 9. TIMER — counted from startedAt, so a reload does not reset it ---- */
+var timerId = null, warned5 = false;
+function msLeft(){ return S.startedAt ? (CONFIG.MINUTES*60000 - (Date.now() - S.startedAt)) : CONFIG.MINUTES*60000; }
+function hhmmss(ms){
+  if (ms < 0) ms = 0;
+  var s = Math.floor(ms/1000), h = Math.floor(s/3600), m = Math.floor((s%3600)/60), x = s%60;
+  var p = function(v){ return (v<10?'0':'')+v; };
+  return (h>0 ? h+':'+p(m) : m) + ':' + p(x);
+}
+function startTimer(){
+  if (timerId) clearInterval(timerId);
+  tickTimer();
+  timerId = setInterval(tickTimer, 1000);
+}
+function tickTimer(){
+  if (!testOn()) return;
+  var left = msLeft(), c = el('clock');
+  if (c){
+    c.textContent = T.timeLeft(hhmmss(left));
+    if (left <= 5*60000) c.classList.add('low');
+  }
+  if (left <= 5*60000 && !warned5){ warned5 = true; flash(T.fiveLeft); }
+  if (left <= 0){ clearInterval(timerId); timerId = null; submitAll(true); }
+}
+var flashMsg = '';
+function flash(msg){
+  flashMsg = msg;
+  var f = el('flash');
+  if (!f) return;
+  f.textContent = msg;
+  f.classList.remove('hidden');
+}
+
+/* 10. INTEGRITY: tab-away log, paste and copy block ------------------ */
+var awayOpen = false, unloading = false;
+function leave(){
+  if (!testOn() || awayOpen || unloading) return;
+  awayOpen = true;
+  S.away.push({t:Date.now(), d:null});
+  save();
+}
+function comeBack(){
+  if (!awayOpen) return;
+  awayOpen = false;
+  var e = S.away[S.away.length-1];
+  if (!e || e.d !== null) return;
+  e.d = Date.now() - e.t;
+  if (e.d < CONFIG.AWAY_MIN_MS){ S.away.pop(); save(); return; }   /* a flicker, not a leave */
+  save();
+  if (testOn()) flash(T.tabAway);
+}
+/* The reliable signal is the page becoming hidden: another tab, another app, the
+   home screen, a locked screen. Window "blur" is NOT used on touch devices: on
+   iPad and iPhone it fires when the keyboard opens, when a field loses focus and
+   when the browser bars are touched, which logged dozens of false leaves.
+   On a computer with a mouse blur is kept, to catch a second window. */
+var TOUCH = (navigator.maxTouchPoints || 0) > 0 || ('ontouchstart' in window);
+document.addEventListener('visibilitychange', function(){ document.hidden ? leave() : comeBack(); });
+if (!TOUCH){
+  window.addEventListener('blur', leave);
+  window.addEventListener('focus', function(){ if (!document.hidden) comeBack(); });
+}
+window.addEventListener('pageshow', function(){ unloading = false; });
+/* a reload or a closed tab fires "hidden" first: that is not a leave */
+window.addEventListener('pagehide', function(){
+  unloading = true;
+  if (!awayOpen) return;
+  var e = S.away[S.away.length-1];
+  if (e && e.d === null && Date.now() - e.t < 700){ S.away.pop(); awayOpen = false; save(); }
+});
+
+var lastBump = {paste:0, copy:0};
+function bump(kind){
+  var now = Date.now();
+  if (now - lastBump[kind] < 700) return;           /* one action, one attempt */
+  lastBump[kind] = now;
+  if (kind === 'paste') S.pasteN++; else S.copyN++;
+  save();
+}
+['paste','drop'].forEach(function(ev){
+  document.addEventListener(ev, function(e){
+    if (!testOn()) return;
+    e.preventDefault(); bump('paste');
+  }, true);
+});
+document.addEventListener('beforeinput', function(e){
+  if (!testOn()) return;
+  var t = e.inputType;
+  if (t === 'insertFromPaste' || t === 'insertFromDrop' || t === 'insertFromYank' || t === 'insertFromPasteAsQuotation'){
+    e.preventDefault(); bump('paste');
+  }
+}, true);
+['copy','cut'].forEach(function(ev){
+  document.addEventListener(ev, function(e){
+    if (!testOn()) return;
+    e.preventDefault(); bump('copy');
+  }, true);
+});
+document.addEventListener('dragstart', function(e){
+  if (!testOn()) return;
+  e.preventDefault(); bump('copy');
+}, true);
+document.addEventListener('dragover', function(e){ if (testOn()) e.preventDefault(); }, true);
+document.addEventListener('contextmenu', function(e){ if (testOn()) e.preventDefault(); }, true);
+
+/* 11. RENDERING ------------------------------------------------------- */
+function input(key, cls, label){
+  var v = S.ans[key] || '';
+  return '<input class="inl '+(cls||'')+(v?' filled':'')+'" type="text" data-key="'+key+'" '+
+    'value="'+esc(v)+'" spellcheck="false" autocapitalize="off" autocorrect="off" autocomplete="off" '+
+    'aria-label="'+esc(label)+'">';
+}
+function area(key, label){
+  var v = S.ans[key] || '';
+  return '<textarea class="inl wide'+(v?' filled':'')+'" rows="2" data-key="'+key+'" spellcheck="false" '+
+    'autocapitalize="off" autocorrect="off" autocomplete="off" aria-label="'+esc(label)+'">'+esc(v)+'</textarea>';
+}
+/* {{}} / {{a}} / {{b}} → inline fields of item `base` */
+function fillFields(text, base, cls){
+  return esc(text).replace(/\{\{([a-z]?)\}\}/g, function(m, s){
+    return '<span class="gapunit">'+input(base+s, cls, 'Item '+base)+'</span>';
+  });
+}
+function optButtons(key, opts, row){
+  var cur = S.ans[key];
+  return '<div class="opts'+(row?' row':'')+'" data-key="'+key+'">'+opts.map(function(o,i){
+    return '<button class="opt" type="button" data-id="'+esc(o.id)+'" aria-pressed="'+(cur===o.id?'true':'false')+'">'+
+      (row ? '' : '<span class="mark">'+letter(i)+'</span>')+'<span>'+esc(o.t)+'</span></button>';
+  }).join('')+'</div>';
+}
+function qWrap(i, n, inner){
+  return '<div class="q'+(i===0?' first':'')+'"><div class="q-head"><span class="q-num">'+esc(n)+'</span>'+
+    '<span class="q-text">'+inner+'</span></div></div>';
+}
+function boxHTML(words, used){
+  return '<div class="wordbox">'+words.map(function(w){
+    var t = typeof w === 'string' ? w : w.t, u = used && typeof w !== 'string' && used.indexOf(w.id) >= 0;
+    return '<span class="chip'+(u?' used':'')+'">'+esc(t)+'</span>';
+  }).join('')+'</div>';
+}
+function usedIds(p){
+  return p.gaps.map(function(g){ return S.ans[p.ex+'.'+g]; }).filter(Boolean);
+}
+/* {{a}} → a tappable gap that opens the picker */
+function fillGaps(text, p, list, long){
+  return esc(text).replace(/\{\{([a-z])\}\}/g, function(m, g){
+    var key = p.ex+'.'+g, o = S.ans[key] ? byId(list, S.ans[key]) : null;
+    return '<button class="gap-btn'+(long?' long':'')+(o?' set':'')+'" type="button" data-gap="'+key+'" data-ex="'+p.ex+'">'+
+      (o ? '<b>('+g+')</b>&nbsp;'+esc(o.t) : '('+g+')')+'</button>';
+  });
+}
+/* the reading text of another exercise, read-only, with the student's choices in place */
+function passageRO(p){
+  var ps = p.paras.map(function(t){
+    return '<p>'+esc(t).replace(/\{\{([a-z])\}\}/g, function(m, g){
+      var o = S.ans[p.ex+'.'+g] ? byId(p.sentences, S.ans[p.ex+'.'+g]) : null;
+      return o ? '<span class="ins">'+esc(o.t)+'</span>' : '<span class="unset">('+g+') ________</span>';
+    })+'</p>';
+  }).join('');
+  return '<div class="passage"><h4>'+esc(p.title)+'</h4>'+ps+'</div>';
+}
+
+function partHTML(p, multi){
+  var h = (multi ? '<h3>Exercise '+p.ex+'</h3>' : '') + '<div class="instr">'+esc(p.instr)+'</div>';
+
+  if (p.type === 'lines'){
+    if (p.box) h += boxHTML(p.box);
+    h += p.items.map(function(it, i){
+      var base = p.ex+'.'+it.n, inner;
+      if (it.rows) inner = it.rows.map(function(r){
+        return '<span class="who">'+esc(r[0])+':</span> '+fillFields(r[1], base, p.w);
+      }).join('<br>');
+      else inner = fillFields(it.t, base, p.w);
+      if (p.count) inner += '<span class="count" data-count="'+base+'"></span>';
+      return qWrap(i, it.n, '<span class="sent">'+inner+'</span>');
+    }).join('');
+  }
+  else if (p.type === 'defs' || p.type === 'write'){
+    h += p.items.map(function(it, i){
+      var key = p.ex+'.'+it.n;
+      var top = p.type === 'write' ? '<span class="prompt">'+esc(it.t)+'</span>' : esc(it.t);
+      var fld = p.type === 'write' ? area(key, 'Item '+key) : input(key, 'wide', 'Item '+key);
+      return qWrap(i, it.n, top + '<span style="display:block;margin-top:8px">'+fld+'</span>');
+    }).join('');
+  }
+  else if (p.type === 'chips'){
+    h += boxHTML(p.box, usedIds(p));
+    h += '<p class="tiny" style="margin:-8px 0 14px">'+esc(T.tapGap)+'</p>';
+    h += '<div class="passage">'+p.turns.map(function(r){
+      return '<p class="turn"><span class="who">'+esc(r[0])+':</span> '+fillGaps(r[1], p, p.box, false)+'</p>';
+    }).join('')+'</div>';
+  }
+  else if (p.type === 'cloze'){
+    h += '<div class="passage"><h4>'+esc(p.title)+'</h4><p class="byline">'+esc(p.byline)+'</p>'+
+      p.paras.map(function(t){
+        return '<p class="sent">'+esc(t).replace(/\{\{([a-z])\}\}/g, function(m, g){
+          return '<span class="gapunit"><span class="gnum">'+g+'</span>'+input(p.ex+'.'+g, 'w-s', 'Gap '+g)+'</span>';
+        })+'</p>';
+      }).join('')+'</div>';
+  }
+  else if (p.type === 'tfn'){
+    h += p.items.map(function(it, i){
+      return qWrap(i, it.n, esc(it.t)) + optButtons(p.ex+'.'+it.n, p.opts, true);
+    }).join('');
+  }
+  else if (p.type === 'bank'){
+    var used = usedIds(p);
+    h += '<p class="tiny" style="margin:-8px 0 14px">'+esc(T.tapGap)+'</p>';
+    h += '<div class="passage"><h4>'+esc(p.title)+'</h4>'+p.paras.map(function(t){
+      return '<p>'+fillGaps(t, p, p.sentences, true)+'</p>';
+    }).join('')+'</div>';
+    h += '<ul class="sentlist">'+p.sentences.map(function(s){
+      return '<li class="'+(used.indexOf(s.id)>=0?'used':'')+'"><span class="mark">'+esc(s.id)+'</span><span>'+esc(s.t)+'</span></li>';
+    }).join('')+'</ul>';
+  }
+  else if (p.type === 'mcq'){
+    if (p.passageFrom) h += passageRO(partByEx(p.passageFrom));
+    h += p.items.map(function(it, i){
+      var key = p.ex+'.'+it.n, ord = orderFor(key, it.opts);
+      var opts = ord.map(function(id){ return byId(it.opts, id); });
+      return qWrap(i, it.n, esc(it.t)) + optButtons(key, opts, false);
+    }).join('');
+  }
+  return h;
+}
+
+function playerHTML(){
+  var left = CONFIG.AUDIO_PLAYS - S.plays, none = left <= 0;
+  return '<div class="player">'+
+    '<div class="plays'+(none?' none':'')+'" id="plays">'+
+      esc(none ? T.noPlays : T.playsLeft(left, CONFIG.AUDIO_PLAYS))+'</div>'+
+    '<button class="btn play-btn" id="play"'+(none?' disabled':'')+'>'+esc(T.play)+'</button>'+
+    '<div class="pbar"><i id="pfill"></i></div>'+
+    '<div class="ptime" id="ptime">0:00 / 0:00</div>'+
+    '<p class="tiny" style="margin:12px 0 0">'+esc(T.noPause)+'</p>'+
+    '<div class="locked hidden" id="aerr">'+esc(T.audioErr)+'</div>'+
+  '</div>';
+}
+
+function renderScreen(keepScroll){
+  document.body.classList.add('testing');
+  var sc = DATA[S.idx], last = (S.idx === DATA.length-1), y = window.scrollY;
+  var multi = sc.parts.length > 1;
+  var body = (sc.audio ? playerHTML() : '') + sc.parts.map(function(p){ return partHTML(p, multi); }).join('');
+  app(
+  '<div class="topbar"><div class="wrap">'+
+    '<div class="crumb">'+esc(sc.label)+' <span>· '+esc(sc.section)+'</span></div>'+
+    '<div class="clock" id="clock">'+esc(T.timeLeft(hhmmss(msLeft())))+'</div>'+
+  '</div><div class="wrap"><div class="bar"><i style="width:'+
+    Math.round(S.idx/DATA.length*100)+'%"></i></div></div></div>'+
+  '<div class="wrap" style="padding-top:20px">'+
+    '<div class="flash'+(flashMsg && keepScroll ? '' : ' hidden')+'" id="flash">'+esc(flashMsg)+'</div>'+
+    '<h2>'+esc(sc.title)+'</h2>'+
+    '<p class="muted" style="margin-bottom:14px">'+esc(sc.section)+'</p>'+
+    body +
+  '</div>'+
+  '<div class="footbar"><div class="wrap">'+
+    '<button class="btn" id="nav">'+esc(last ? T.finish : T.next)+'</button>'+
+  '</div></div>');
+  if (!keepScroll) flashMsg = '';
+  wire(sc);
+  el('nav').onclick = function(){ goNext(last); };
+  tickTimer();
+  window.scrollTo(0, keepScroll ? y : 0);
+}
+
+/* 12. HANDLERS -------------------------------------------------------- */
+function paintCount(inp, range){
+  var c = document.querySelector('[data-count="'+inp.getAttribute('data-key')+'"]');
+  if (!c) return;
+  var n = wordCount(inp.value), ok = n >= range[0] && n <= range[1];
+  c.className = 'count' + (n===0 ? '' : (ok ? ' ok' : ' bad'));
+  c.textContent = n===0 ? '' : (ok ? T.wordsOk(n) : T.wordsBad(n, range[0], range[1]));
+}
+function wire(sc){
+  each('.opts[data-key] .opt', function(b){
+    b.onclick = function(){
+      var box = b.parentNode, key = box.getAttribute('data-key');
+      Array.prototype.forEach.call(box.querySelectorAll('.opt'), function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      S.ans[key] = b.getAttribute('data-id');
+      save();
+    };
+  });
+  each('.inl[data-key]', function(inp){
+    var key = inp.getAttribute('data-key'), p = partByEx(parseInt(key, 10));
+    if (p && p.count) paintCount(inp, p.count);
+    inp.oninput = function(){
+      S.ans[key] = inp.value;
+      inp.classList.toggle('filled', !!inp.value.trim());
+      if (p && p.count) paintCount(inp, p.count);
+      save();
+    };
+  });
+  each('.gap-btn[data-gap]', function(g){
+    g.onclick = function(){ picker(g.getAttribute('data-gap'), partByEx(parseInt(g.getAttribute('data-ex'), 10))); };
+  });
+  if (sc.audio) wireAudio();
+}
+
+/* picker: choose a word or a sentence for one gap */
+function picker(key, p){
+  var list = p.type === 'chips' ? p.box : p.sentences, used = usedIds(p), cur = S.ans[key];
+  var g = key.split('.')[1];
+  var v = document.createElement('div');
+  v.className = 'veil';
+  v.innerHTML = '<div class="modal"><p><b>'+esc(T.choose(g))+'</b></p><div class="pick">'+
+    list.filter(function(o){ return o.id === cur || used.indexOf(o.id) < 0; }).map(function(o){
+      return '<button class="opt" type="button" data-id="'+esc(o.id)+'" aria-pressed="'+(o.id===cur?'true':'false')+'">'+
+        (p.type === 'bank' ? '<span class="mark">'+esc(o.id)+'</span>' : '')+'<span>'+esc(o.t)+'</span></button>';
+    }).join('')+'</div><div class="btn-row">'+
+    (cur ? '<button class="btn btn-ghost" id="pk-clear">'+esc(T.clear)+'</button>' : '')+
+    '<button class="btn btn-ghost" id="pk-no">'+esc(T.cancel)+'</button></div></div>';
+  document.body.appendChild(v);
+  var close = function(){ v.remove(); };
+  el('pk-no').onclick = close;
+  if (cur) el('pk-clear').onclick = function(){ delete S.ans[key]; save(); close(); renderScreen(true); };
+  Array.prototype.forEach.call(v.querySelectorAll('.pick .opt'), function(b){
+    b.onclick = function(){ S.ans[key] = b.getAttribute('data-id'); save(); close(); renderScreen(true); };
+  });
+}
+
+/* player: two plays, no pause, no seeking */
+function wireAudio(){
+  var a = el('listening-audio'), btn = el('play'), fill = el('pfill'),
+      time = el('ptime'), badge = el('plays');
+  if (!a || !btn) return;
+  var playing = false, lastT = 0;
+  function fmt(t){
+    if (!isFinite(t)) t = 0;
+    var m = Math.floor(t/60), s = Math.floor(t%60);
+    return m + ':' + (s<10?'0':'') + s;
+  }
+  function paint(){
+    var d = a.duration || 0;
+    time.textContent = fmt(a.currentTime) + ' / ' + fmt(d);
+    fill.style.width = d ? (a.currentTime/d*100)+'%' : '0';
+  }
+  function broken(){ var x = el('aerr'); if (x) x.classList.remove('hidden'); playing = false; if (S.plays < CONFIG.AUDIO_PLAYS) btn.disabled = false; }
+  a.onloadedmetadata = paint;
+  a.ontimeupdate = function(){ if (!a.seeking) lastT = a.currentTime; paint(); };
+  a.onseeking = function(){ if (Math.abs(a.currentTime - lastT) > 1){ try { a.currentTime = lastT; } catch(e){} } };
+  a.onpause = function(){ if (playing && !a.ended){ a.play().catch(function(){}); } };
+  a.onerror = broken;
+  if (a.error) broken();
+  a.onended = function(){
+    playing = false;
+    S.plays++; save();                              /* a play counts only here */
+    var left = CONFIG.AUDIO_PLAYS - S.plays;
+    if (left <= 0){
+      btn.disabled = true;
+      badge.className = 'plays none';
+      badge.textContent = T.noPlays;
+    } else {
+      btn.disabled = false;
+      badge.className = 'plays';
+      badge.textContent = T.playsLeft(left, CONFIG.AUDIO_PLAYS);
+    }
+  };
+  btn.onclick = function(){
+    if (S.plays >= CONFIG.AUDIO_PLAYS) return;
+    playing = true; btn.disabled = true;
+    badge.className = 'plays playing';
+    badge.textContent = T.playing + '  ' + T.playsLeft(CONFIG.AUDIO_PLAYS - S.plays, CONFIG.AUDIO_PLAYS);
+    try { a.currentTime = 0; } catch(e){}
+    lastT = 0;
+    a.play().catch(function(){
+      playing = false; btn.disabled = false;
+      badge.className = 'plays';
+      badge.textContent = T.playsLeft(CONFIG.AUDIO_PLAYS - S.plays, CONFIG.AUDIO_PLAYS);
+      if (a.error || a.networkState === 3) broken();
+    });
+  };
+}
+function stopAudio(){
+  var a = el('listening-audio');
+  if (a){ a.onpause = null; a.onended = null; try { a.pause(); } catch(e){} }
+}
+
+/* 13. NAVIGATION — forward only; blanks never block ------------------- */
+function isBlank(item){
+  for (var i=0;i<item.fields.length;i++){
+    var v = S.ans[item.fields[i]];
+    if (v === undefined || String(v).trim() === '') return true;
+  }
+  return false;
+}
+function blanksOn(sc){
+  var n = 0;
+  sc.parts.forEach(function(p){ partItems(p).forEach(function(it){ if (isBlank(it)) n++; }); });
+  return n;
+}
+function modal(text, onYes){
+  var v = document.createElement('div');
+  v.className = 'veil';
+  v.innerHTML = '<div class="modal"><p>'+esc(text)+'</p><div class="btn-row">'+
+    '<button class="btn btn-ghost" id="m-no">'+esc(T.cancel)+'</button>'+
+    '<button class="btn" id="m-yes">'+esc(T.cont)+'</button></div></div>';
+  document.body.appendChild(v);
+  el('m-no').onclick = function(){ v.remove(); };
+  el('m-yes').onclick = function(){ v.remove(); onYes(); };
+}
+function goNext(last){
+  var b = blanksOn(DATA[S.idx]);
+  var msg = (b > 0 ? T.blanks(b)+' ' : '') + (last ? T.submitQ : T.noReturn);
+  modal(msg, function(){
+    stopAudio();
+    if (last){ submitAll(false); return; }
+    S.idx++; save(); renderScreen();
+  });
+}
+
+/* 14. SCORING — computed here, sent to the form, never shown --------- */
+function optText(p, id){
+  if (p.type === 'chips'){ var o = byId(p.box, id); return o ? o.t : id; }
+  if (p.type === 'mcq'){
+    for (var i=0;i<p.items.length;i++){ var x = byId(p.items[i].opts, id); if (x) return x.t; }
+  }
+  return id;                                   /* T / F / NM, sentence number */
+}
+function mcqText(p, item, id){
+  var n = item.id.split('.')[1];
+  for (var i=0;i<p.items.length;i++) if (String(p.items[i].n) === n){ var x = byId(p.items[i].opts, id); return x ? x.t : id; }
+  return id;
+}
+function isOK(item){
+  var k = ref()[item.id], v = S.ans[item.fields[0]];
+  if (k.k !== undefined) return v === k.k;
+  if (k.f) return frameOK(v, k.f);
+  if (k.a) return matches(v, k.a, false) && matches(S.ans[item.fields[1]], k.b, false);
+  return matches(v, k.v, !!k.art);
+}
+function correctText(p, item){
+  var k = ref()[item.id];
+  if (k.k !== undefined) return p.type === 'mcq' ? mcqText(p, item, k.k) : optText(p, k.k);
+  if (k.f) return k.s;
+  if (k.a) return k.a[0]+' | '+k.b[0];
+  return k.v[0];
+}
+function givenText(p, item){
+  if (item.fields.length > 1){
+    var parts = item.fields.map(function(f){ var v = S.ans[f]; return (v === undefined || !String(v).trim()) ? '—' : String(v).trim(); });
+    return parts.every(function(x){ return x === '—'; }) ? null : parts.join(' | ');
+  }
+  var v = S.ans[item.fields[0]];
+  if (v === undefined || String(v).trim() === '') return null;
+  if (ref()[item.id].k !== undefined) return p.type === 'mcq' ? mcqText(p, item, v) : optText(p, v);
+  return String(v).trim();
+}
+function gradeFor(total){
+  var t = CONFIG.TOTAL, c = function(x){ return Math.ceil(t*x - 1e-9); };
+  if (total >= c(0.81)) return 5;
+  if (total >= c(0.61)) return 4;
+  if (total >= c(0.41)) return 3;
+  return 2;
+}
+function score(){
+  var rows = [];
+  DATA.forEach(function(sc){
+    sc.parts.forEach(function(p){
+      partItems(p).forEach(function(item){ rows.push({p:p, sec:sc.section, item:item, ok:isOK(item)}); });
+    });
+  });
+  var total = rows.filter(function(r){ return r.ok; }).length;
+  return {rows:rows, total:total, pct:Math.floor(total / CONFIG.TOTAL * 100), grade:gradeFor(total)};
+}
+
+/* 15. TEACHER REPORT — Russian labels, English answers --------------- */
+function p2(v){ return (v<10?'0':'')+v; }
+function hm(ms){ var d = new Date(ms); return p2(d.getHours())+':'+p2(d.getMinutes()); }
+function dmy(ms){ var d = new Date(ms); return p2(d.getDate())+'.'+p2(d.getMonth()+1)+'.'+d.getFullYear(); }
+function dur(ms){
+  var s = Math.round(ms/1000);
+  if (s < 60) return s+' с';
+  return Math.floor(s/60)+' мин '+p2(s%60)+' с';
+}
+function awayLine(){
+  var a = S.away || [];
+  if (!a.length) return 'УХОДЫ СО ВКЛАДКИ: 0';
+  var shown = a.slice(0, CONFIG.AWAY_MAX).map(function(e){
+    return hm(e.t)+' ('+(e.d === null ? 'не вернулся' : 'на '+dur(e.d))+')';
+  }).join(' · ');
+  if (a.length > CONFIG.AWAY_MAX) shown += ' … и ещё '+(a.length - CONFIG.AWAY_MAX);
+  return 'УХОДЫ СО ВКЛАДКИ: '+a.length+' — '+shown;
+}
+function buildReport(R){
+  var end = S.finished.at, auto = S.finished.auto;
+  var mins = Math.max(0, Math.round((end - S.startedAt)/60000));
+  var sameDay = dmy(end) === dmy(S.startedAt);
+  var head = 'ВРЕМЯ: начало '+dmy(S.startedAt)+', '+hm(S.startedAt)+' · сдано '+(sameDay ? '' : dmy(end)+', ')+hm(end)+
+             ' · '+mins+' мин из '+CONFIG.MINUTES+(auto ? ' (автоотправка по таймеру)' : '')+'\n'+
+             awayLine()+'\n'+
+             'ПОПЫТКИ ВСТАВКИ: '+(S.pasteN||0)+' · ПОПЫТКИ КОПИРОВАНИЯ: '+(S.copyN||0)+'\n\n';
+  var wrong = R.rows.filter(function(r){ return !r.ok; }), lines = [], cur = null;
+  wrong.forEach(function(r){
+    if (cur !== r.p.ex){ cur = r.p.ex; lines.push('Ex. '+r.p.ex+' ('+r.sec+'):'); }
+    var g = givenText(r.p, r.item);
+    lines.push('  '+r.item.id+' '+(g === null ? 'нет ответа' : '«'+g+'»')+' → «'+correctText(r.p, r.item)+'»');
+  });
+  var errors = head + (wrong.length ? 'ОШИБКИ ('+wrong.length+' из '+CONFIG.TOTAL+'):\n'+lines.join('\n') : 'ОШИБКИ: нет');
+  if (errors.length > CONFIG.ERR_LIMIT) errors = errors.slice(0, CONFIG.ERR_LIMIT-20)+'\n…(отчёт обрезан)';
+  return {
+    firstName: S.student.first,
+    surname:   S.student.last,
+    group:     S.student.group,
+    result:    R.total+' / '+CONFIG.TOTAL+' ('+R.pct+'%) — оценка '+R.grade,
+    errors:    errors
+  };
+}
+/* what the student may copy if sending fails: their own answers only */
+function answersAsText(){
+  var out = [S.student.last+' '+S.student.first+', '+S.student.group,
+             CONFIG.TITLE+' · started '+dmy(S.startedAt)+' '+hm(S.startedAt)+' · finished '+hm(S.finished.at), ''];
+  DATA.forEach(function(sc){
+    sc.parts.forEach(function(p){
+      partItems(p).forEach(function(item){
+        var g = givenText(p, item);
+        out.push(item.id+'  '+(g === null ? '—' : g));
+      });
+    });
+  });
+  return out.join('\n');
+}
+
+/* 16. SENDING TO THE GOOGLE FORM ------------------------------------- */
+function formURL(){ return 'https://docs.google.com/forms/d/e/'+CONFIG.FORM_ID+'/formResponse'; }
+function payloadPairs(p){
+  var pairs = [], skipped = [];
+  Object.keys(CONFIG.ENTRY).forEach(function(k){
+    var id = CONFIG.ENTRY[k];
+    if (!/^entry\.\d+$/.test(id)){ skipped.push(k+' ('+id+')'); return; }
+    pairs.push([id, p[k] == null ? '' : String(p[k])]);
+  });
+  if (skipped.length) console.warn('Fields without a real entry ID were not sent: '+skipped.join(', '));
+  return pairs;
+}
+function sendFetch(pairs){
+  var body = new URLSearchParams();
+  pairs.forEach(function(kv){ body.append(kv[0], kv[1]); });
+  return fetch(formURL(), {method:'POST', mode:'no-cors', body:body});
+}
+function sendIframe(pairs){
+  return new Promise(function(resolve, reject){
+    if (navigator.onLine === false){ reject(new Error('offline')); return; }
+    var f = document.createElement('form');
+    f.action = formURL(); f.method = 'POST'; f.target = 'gfsink'; f.style.display = 'none';
+    pairs.forEach(function(kv){
+      var i = document.createElement('input');
+      i.type = 'hidden'; i.name = kv[0]; i.value = kv[1]; f.appendChild(i);
+    });
+    document.body.appendChild(f);
+    var sink = el('gfsink'), done = false;
+    var fin = function(){ if (!done){ done = true; try{ f.remove(); }catch(e){} resolve(); } };
+    sink.addEventListener('load', fin, {once:true});
+    setTimeout(fin, 5000);
+    f.submit();
+  });
+}
+/* fetch → (on error) one more fetch → (on error) hidden form; all failed → failure screen */
+function deliver(pairs){
+  var tryFetch = function(){
+    try { return sendFetch(pairs); } catch(e){ return Promise.reject(e); }
+  };
+  return tryFetch().catch(function(){
+    return new Promise(function(r){ setTimeout(r, 1500); }).then(tryFetch);
+  }).catch(function(){ return sendIframe(pairs); });
+}
+
+var submitting = false;
+function submitAll(auto){
+  if (submitting) return;
+  submitting = true;
+  if (timerId){ clearInterval(timerId); timerId = null; }
+  stopAudio();
+  if (!S.finished){
+    if (awayOpen) comeBack();
+    S.finished = {at:Date.now(), auto:!!auto};
+    save();
+  }
+  document.body.classList.remove('testing');
+  var pairs;
+  try { pairs = payloadPairs(buildReport(score())); }
+  catch(e){ console.error(e); submitting = false; app('<div class="wrap final"><p>'+esc(T.loadErr)+'</p></div>'); return; }
+  screenSending();
+  var settled = false;
+  var finish = function(ok){
+    if (settled) return;
+    settled = true; submitting = false;
+    if (ok){
+      lsSet(CONFIG.STORE_DONE, {name:S.student.last+' '+S.student.first, at:S.finished.at});
+      lsDel(CONFIG.STORE_PROG);
+      screenDone(S.finished.auto);
+    } else screenFail();
+  };
+  var guard = setTimeout(function(){ finish(navigator.onLine !== false); }, 12000);
+  deliver(pairs).then(function(){ clearTimeout(guard); finish(true); },
+                      function(){ clearTimeout(guard); finish(false); });
+}
+
+/* 17. FINAL SCREENS — no score, no grade, no errors, no key ---------- */
+function screenSending(){
+  app('<div class="wrap final"><p class="muted">'+esc(T.sending)+'</p></div>');
+}
+function screenDone(auto){
+  app('<div class="wrap"><div class="card final" style="margin-top:34px">'+
+    '<div class="tick">✓</div>'+
+    '<h2>'+esc(auto ? T.timeUp : T.doneTitle)+'</h2>'+
+    '<p class="muted">'+esc(T.doneSub)+'</p>'+
+  '</div></div>');
+}
+function screenFail(){
+  app('<div class="wrap"><div class="card final" style="margin-top:34px">'+
+    '<div class="tick warn">!</div>'+
+    '<h2>'+esc(T.failTitle)+'</h2>'+
+    '<p class="muted">'+esc(T.failSub)+'</p>'+
+    '<div class="btn-row" style="margin-top:18px">'+
+      '<button class="btn btn-ghost" id="cp">'+esc(T.copy)+'</button>'+
+      '<button class="btn" id="rt">'+esc(T.retry)+'</button>'+
+    '</div>'+
+  '</div></div>');
+  el('cp').onclick = function(){
+    var txt = answersAsText(), b = el('cp');
+    var ok = function(){ b.textContent = T.copied; };
+    var old = function(){
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch(e){}
+      ta.remove();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, old);
+    else old();
+  };
+  el('rt').onclick = function(){ submitAll(S.finished.auto); };
+}
+function screenAlready(d){
+  app('<div class="wrap"><div class="card final" style="margin-top:34px">'+
+    '<div class="tick stop">✓</div>'+
+    '<h2>'+esc(T.alreadyTitle)+'</h2>'+
+    '<p class="muted">'+esc(d.name||'')+(d.at ? ' · '+dmy(d.at)+', '+hm(d.at) : '')+'</p>'+
+  '</div></div>');
+}
+
+/* 18. BOOT ------------------------------------------------------------ */
+(function boot(){
+  try {
+    var done = lsGet(CONFIG.STORE_DONE);
+    if (done){ screenAlready(done); return; }
+    var prog = lsGet(CONFIG.STORE_PROG);
+    if (prog && prog.startedAt && prog.student && prog.student.first){
+      S = prog;
+      S.ans = S.ans || {}; S.orders = S.orders || {}; S.away = S.away || [];
+      S.plays = S.plays || 0; S.pasteN = S.pasteN || 0; S.copyN = S.copyN || 0; S.idx = S.idx || 0;
+      if (S.idx >= DATA.length) S.idx = DATA.length-1;
+      var e = S.away[S.away.length-1];
+      if (e && e.d === null) e.d = Math.max(0, (S.finished ? S.finished.at : Date.now()) - e.t);
+      if (S.finished){ submitAll(S.finished.auto); return; }   /* finished, but not delivered yet */
+      if (msLeft() <= 0){ submitAll(true); return; }           /* time ran out while away */
+      save(); startTimer(); renderScreen(); return;
+    }
+    screenStart();
+  } catch(e){
+    console.error(e);
+    app('<div class="wrap final"><p>'+esc(T.loadErr)+'</p></div>');
+  }
+})();
+</script>
+</body>
+</html>
